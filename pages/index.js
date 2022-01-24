@@ -4,32 +4,41 @@ import appConfig from "../config.json";
 
 function GlobalStyle() {
   return (
-    <style global jsx>{`
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        list-style: none;
-      }
-      body {
-        font-family: "Open Sans", sans-serif;
-      }
-      /* App fit Height */
-      html,
-      body,
-      #__next {
-        min-height: 100vh;
-        display: flex;
-        flex: 1;
-      }
-      #__next {
-        flex: 1;
-      }
-      #__next > * {
-        flex: 1;
-      }
-      /* ./App fit Height */
-    `}</style>
+    <>
+      <link rel="preconnect" href="https://fonts.googleapis.com" />
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+      <link
+        href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap"
+        rel="stylesheet"
+      />
+
+      <style global jsx>{`
+        * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+          list-style: none;
+        }
+        body {
+          font-family: "Open Sans", sans-serif;
+        }
+        /* App fit Height */
+        html,
+        body,
+        #__next {
+          min-height: 100vh;
+          display: flex;
+          flex: 1;
+        }
+        #__next {
+          flex: 1;
+        }
+        #__next > * {
+          flex: 1;
+        }
+        /* ./App fit Height */
+      `}</style>
+    </>
   );
 }
 
@@ -44,23 +53,12 @@ function Titulo(props) {
           color: ${appConfig.theme.colors.neutrals["000"]};
           font-size: 24px;
           font-weight: 600;
+          font-family: "Press Start 2P";
         }
       `}</style>
     </>
   );
 }
-
-// function HomePage() {
-//   return (
-//     <div>
-//       <GlobalStyle />
-//       <Titulo tag="h2">Boas vindas de volta!</Titulo>
-//       <h2>Discord - Alura Matrix</h2>
-//     </div>
-//   );
-// }
-
-// export default HomePage;
 
 export default function PaginaInicial() {
   const username = "Ruhtra47";
@@ -74,7 +72,8 @@ export default function PaginaInicial() {
           alignItems: "center",
           justifyContent: "center",
           backgroundColor: appConfig.theme.colors.primary[500],
-          backgroundImage: "url(https://wallpaperaccess.com/full/280236.jpg)",
+          backgroundImage:
+            "url(https://i.pinimg.com/originals/fa/dc/b2/fadcb24075acb650de29f258af69d830.gif)",
           backgroundRepeat: "no-repeat",
           backgroundSize: "cover",
           backgroundBlendMode: "multiply",
@@ -96,6 +95,7 @@ export default function PaginaInicial() {
             margin: "16px",
             boxShadow: "0 2px 10px 0 rgb(0 0 0 / 20%)",
             backgroundColor: appConfig.theme.colors.neutrals[700],
+            opacity: 0.93,
           }}
         >
           {/* Formulário */}
@@ -111,7 +111,7 @@ export default function PaginaInicial() {
               marginBottom: "32px",
             }}
           >
-            <Titulo tag="h2">Boas vindas de volta!</Titulo>
+            <Titulo tag="h2">De volta às origens</Titulo>
             <Text
               variant="body3"
               styleSheet={{
