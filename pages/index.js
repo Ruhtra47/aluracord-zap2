@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useRouter } from "next/router";
 import { Box, Button, Text, TextField, Image } from "@skynexui/components";
-
 import appConfig from "../config.json";
 
 function Titulo(props) {
@@ -16,6 +15,7 @@ function Titulo(props) {
                     font-size: 24px;
                     font-weight: 600;
                     font-family: "Press Start 2P";
+                    opacity: 1;
                 }
             `}</style>
         </>
@@ -62,7 +62,6 @@ export default function PaginaInicial() {
                         margin: "16px",
                         boxShadow: "0 2px 10px 0 rgb(0 0 0 / 20%)",
                         backgroundColor: appConfig.theme.colors.neutrals[700],
-                        opacity: 0.93,
                     }}
                 >
                     {/* Formulário */}
@@ -82,7 +81,7 @@ export default function PaginaInicial() {
                             marginBottom: "32px",
                         }}
                     >
-                        <Titulo tag="h2">De volta às origens</Titulo>
+                        <Titulo tag="h2">Retrocord</Titulo>
                         <Text
                             variant="body3"
                             styleSheet={{
@@ -182,21 +181,8 @@ export default function PaginaInicial() {
                                             appConfig.theme.colors
                                                 .neutrals[900],
                                         padding: "3px 10px",
-                                        borderRadius: "1000px",
-                                    }}
-                                >
-                                    {username}
-                                </Text>
-                                <Text
-                                    variant="body4"
-                                    styleSheet={{
-                                        color: appConfig.theme.colors
-                                            .neutrals[200],
-                                        backgroundColor:
-                                            appConfig.theme.colors
-                                                .neutrals[900],
-                                        padding: "3px 10px",
-                                        borderRadius: "1000px",
+                                        borderRadius: "200px",
+                                        fontSize: "15px",
                                     }}
                                 >
                                     {name}
