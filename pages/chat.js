@@ -165,63 +165,71 @@ function MessageList(props) {
         >
             {props.mensagens.map((mensagem) => {
                 return (
-                    <Text
-                        key={mensagem.id}
-                        tag="li"
+                    <Box
                         styleSheet={{
-                            borderRadius: "5px",
-                            padding: "6px",
-                            marginBottom: "12px",
-                            hover: {
-                                backgroundColor:
-                                    appConfig.theme.colors.neutrals[700],
-                            },
+                            display: "flex",
+                            justifyContent: "space-between",
                         }}
                     >
-                        <Box
+                        <Text
+                            key={mensagem.id}
+                            tag="li"
                             styleSheet={{
-                                marginBottom: "8px",
+                                borderRadius: "5px",
+                                padding: "6px",
+                                marginBottom: "12px",
+                                hover: {
+                                    backgroundColor:
+                                        appConfig.theme.colors.neutrals[700],
+                                },
                             }}
                         >
-                            <Image
+                            <Box
                                 styleSheet={{
-                                    width: "20px",
-                                    height: "20px",
-                                    borderRadius: "50%",
-                                    display: "inline-block",
-                                    marginRight: "8px",
+                                    marginBottom: "8px",
                                 }}
-                                src={`https://github.com/ruhtra47.png`}
-                            />
-                            <Text tag="strong">{mensagem.de}</Text>
-                            <Text
-                                styleSheet={{
-                                    fontSize: "10px",
-                                    marginLeft: "8px",
-                                    color: appConfig.theme.colors.neutrals[300],
-                                }}
-                                tag="span"
                             >
-                                {new Date().toLocaleDateString()}
-                            </Text>
-                            <Button
-                                iconName="FaTrash"
-                                variant="tertiary"
-                                colorVariant="light"
-                                size="sm"
-                                onClick={() => {
-                                    const newMensagens = props.mensagens.filter(
-                                        (atual) => {
-                                            return atual.id !== mensagem.id;
-                                        }
-                                    );
+                                <Image
+                                    styleSheet={{
+                                        width: "20px",
+                                        height: "20px",
+                                        borderRadius: "50%",
+                                        display: "inline-block",
+                                        marginRight: "8px",
+                                    }}
+                                    src={`https://github.com/ruhtra47.png`}
+                                />
+                                <Text tag="strong">{mensagem.de}</Text>
+                                <Text
+                                    styleSheet={{
+                                        fontSize: "10px",
+                                        marginLeft: "8px",
+                                        color: appConfig.theme.colors
+                                            .neutrals[300],
+                                    }}
+                                    tag="span"
+                                >
+                                    {new Date().toLocaleDateString()}
+                                </Text>
+                            </Box>
+                            {mensagem.texto}
+                        </Text>
+                        <Button
+                            iconName="FaTrash"
+                            variant="tertiary"
+                            colorVariant="light"
+                            size="sm"
+                            onClick={() => {
+                                const newMensagens = props.mensagens.filter(
+                                    (atual) => {
+                                        return atual.id !== mensagem.id;
+                                    }
+                                );
 
-                                    props.setListaMensagens(newMensagens);
-                                }}
-                            />
-                        </Box>
-                        {mensagem.texto}
-                    </Text>
+                                props.setListaMensagens(newMensagens);
+                            }}
+                        />
+                    </Box>
                 );
             })}
         </Box>
