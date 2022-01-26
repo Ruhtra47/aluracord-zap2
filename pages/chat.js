@@ -1,5 +1,6 @@
 import { Box, Text, TextField, Image, Button } from "@skynexui/components";
 import React from "react";
+
 import appConfig from "../config.json";
 
 export default function ChatPage() {
@@ -58,7 +59,10 @@ export default function ChatPage() {
                         padding: "16px",
                     }}
                 >
-                    <MessageList mensagens={listaMensagens} />
+                    <MessageList
+                        mensagens={listaMensagens}
+                        setListaMensagens={setListaMensagens}
+                    />
                     <Box
                         as="form"
                         styleSheet={{
@@ -200,7 +204,21 @@ function MessageList(props) {
                             >
                                 {new Date().toLocaleDateString()}
                             </Text>
-                            <Image />
+                            <Button
+                                iconName="FaTrash"
+                                variant="tertiary"
+                                colorVariant="light"
+                                size="sm"
+                                onClick={() => {
+                                    const newMensagens = props.mensagens.filter(
+                                        (atual) => {
+                                            return atual.id !== mensagem.id;
+                                        }
+                                    );
+
+                                    props.setListaMensagens(newMensagens);
+                                }}
+                            />
                         </Box>
                         {mensagem.texto}
                     </Text>
