@@ -1,20 +1,46 @@
 import { Box, Text, TextField, Image, Button } from "@skynexui/components";
 import React from "react";
+import { createClient } from "@supabase/supabase-js";
+import ReactLoading from "react-loading";
 
 import appConfig from "../config.json";
+
+const SUPABASE_ANON_KEY =
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlhdCI6MTY0MzI4ODkyNSwiZXhwIjoxOTU4ODY0OTI1fQ.TYARWNAHIq0ceEllZmYeurieykMmXEJEW2wVD0PcucI";
+const SUPABASE_URL = "https://aliedxyrdogukfhrszxg.supabase.co";
+const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 export default function ChatPage() {
     const [mensagem, setMensagem] = React.useState("");
     const [listaMensagens, setListaMensagens] = React.useState([]);
+    const [done, setDone] = React.useState(false);
+
+    React.useEffect(() => {
+        supabaseClient
+            .from("Mensagens")
+            .select("*")
+            .order("created_at", { ascending: false })
+            .then(({ data }) => {
+                console.log("Dados da consulta: ", data);
+                setListaMensagens(data);
+            });
+        setDone(true);
+    }, []);
 
     function handleNewMessage(novaMensagem) {
         const mensagem = {
-            id: listaMensagens.length,
+            // id: listaMensagens.length,
             de: "ruhtra47",
             texto: novaMensagem,
         };
 
-        setListaMensagens([mensagem, ...listaMensagens]);
+        supabaseClient
+            .from("Mensagens")
+            .insert([mensagem])
+            .then(({ data }) => {
+                setListaMensagens([data[0], ...listaMensagens]);
+            });
+
         setMensagem("");
     }
 
@@ -62,6 +88,7 @@ export default function ChatPage() {
                     <MessageList
                         mensagens={listaMensagens}
                         setListaMensagens={setListaMensagens}
+                        done={done}
                     />
                     <Box
                         as="form"
@@ -163,73 +190,55 @@ function MessageList(props) {
                 marginBottom: "16px",
             }}
         >
+            {!props.done && <ReactLoading />}
             {props.mensagens.map((mensagem) => {
                 return (
-                    <Box
+                    <Text
+                        key={mensagem.id}
+                        tag="li"
                         styleSheet={{
-                            display: "flex",
-                            justifyContent: "space-between",
+                            borderRadius: "5px",
+                            padding: "6px",
+                            marginBottom: "12px",
+                            hover: {
+                                backgroundColor:
+                                    appConfig.theme.colors.neutrals[700],
+                            },
                         }}
                     >
-                        <Text
-                            key={mensagem.id}
-                            tag="li"
+                        <Box
                             styleSheet={{
-                                borderRadius: "5px",
-                                padding: "6px",
-                                marginBottom: "12px",
-                                hover: {
-                                    backgroundColor:
-                                        appConfig.theme.colors.neutrals[700],
-                                },
+                                marginBottom: "8px",
                             }}
                         >
-                            <Box
+                            <Image
                                 styleSheet={{
-                                    marginBottom: "8px",
+                                    width: "20px",
+                                    height: "20px",
+                                    borderRadius: "50%",
+                                    display: "inline-block",
+                                    marginRight: "8px",
+                                    hover: {
+                                        "-webkit-transform": "scale(5)",
+                                        marginLeft: "50px",
+                                    },
                                 }}
+                                src={`https://github.com/${mensagem.de}.png`}
+                            />
+                            <Text tag="strong">{mensagem.de}</Text>
+                            <Text
+                                styleSheet={{
+                                    fontSize: "10px",
+                                    marginLeft: "8px",
+                                    color: appConfig.theme.colors.neutrals[300],
+                                }}
+                                tag="span"
                             >
-                                <Image
-                                    styleSheet={{
-                                        width: "20px",
-                                        height: "20px",
-                                        borderRadius: "50%",
-                                        display: "inline-block",
-                                        marginRight: "8px",
-                                    }}
-                                    src={`https://github.com/ruhtra47.png`}
-                                />
-                                <Text tag="strong">{mensagem.de}</Text>
-                                <Text
-                                    styleSheet={{
-                                        fontSize: "10px",
-                                        marginLeft: "8px",
-                                        color: appConfig.theme.colors
-                                            .neutrals[300],
-                                    }}
-                                    tag="span"
-                                >
-                                    {new Date().toLocaleDateString()}
-                                </Text>
-                            </Box>
-                            {mensagem.texto}
-                        </Text>
-                        <Button
-                            iconName="FaTrash"
-                            variant="tertiary"
-                            colorVariant="light"
-                            size="sm"
-                            onClick={() => {
-                                const newMensagens = props.mensagens.filter(
-                                    (atual) => {
-                                        return atual.id !== mensagem.id;
-                                    }
-                                );
-
-                                props.setListaMensagens(newMensagens);
-                            }}
-                        />
-                    </Box>
+                                {new Date().toLocaleDateString()}
+                            </Text>
+                        </Box>
+                        {mensagem.texto}
+                    </Text>
                 );
             })}
         </Box>
