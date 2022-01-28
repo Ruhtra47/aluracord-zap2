@@ -2,18 +2,33 @@ import { Box, Text, TextField, Image, Button } from "@skynexui/components";
 import React from "react";
 import { createClient } from "@supabase/supabase-js";
 import ReactLoading from "react-loading";
+import { useRouter } from "next/router";
 
 import appConfig from "../config.json";
+import { ButtonSendSticker } from "../src/components/ButtonSendSticker";
+import { ButtonSendMessage } from "../src/components/ButtonSendMessage";
 
 const SUPABASE_ANON_KEY =
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlhdCI6MTY0MzI4ODkyNSwiZXhwIjoxOTU4ODY0OTI1fQ.TYARWNAHIq0ceEllZmYeurieykMmXEJEW2wVD0PcucI";
 const SUPABASE_URL = "https://aliedxyrdogukfhrszxg.supabase.co";
 const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+function MessageListener(adicionarMensagem) {
+    return supabaseClient
+        .from("Mensagens")
+        .on("INSERT", (autoResponse) => {
+            adicionarMensagem(autoResponse.new);
+        })
+        .subscribe();
+}
+
 export default function ChatPage() {
     const [mensagem, setMensagem] = React.useState("");
     const [listaMensagens, setListaMensagens] = React.useState([]);
     const [done, setDone] = React.useState(false);
+
+    const roteamento = useRouter();
+    const usuarioLogado = roteamento.query.username;
 
     React.useEffect(() => {
         supabaseClient
@@ -21,16 +36,22 @@ export default function ChatPage() {
             .select("*")
             .order("created_at", { ascending: false })
             .then(({ data }) => {
-                console.log("Dados da consulta: ", data);
                 setListaMensagens(data);
             });
+
+        MessageListener((novaMensagem) => {
+            setListaMensagens((valorAtualLista) => {
+                return [novaMensagem, ...valorAtualLista];
+            });
+        });
+
         setDone(true);
     }, []);
 
     function handleNewMessage(novaMensagem) {
         const mensagem = {
             // id: listaMensagens.length,
-            de: "ruhtra47",
+            de: usuarioLogado,
             texto: novaMensagem,
         };
 
@@ -38,7 +59,7 @@ export default function ChatPage() {
             .from("Mensagens")
             .insert([mensagem])
             .then(({ data }) => {
-                setListaMensagens([data[0], ...listaMensagens]);
+                console.log("Nova mensagem: ", data);
             });
 
         setMensagem("");
@@ -107,7 +128,9 @@ export default function ChatPage() {
                                 if (event.key === "Enter") {
                                     event.preventDefault();
 
-                                    handleNewMessage(mensagem);
+                                    if (mensagem.length !== 0) {
+                                        handleNewMessage(mensagem);
+                                    }
                                 }
                             }}
                             placeholder="Insira sua mensagem aqui..."
@@ -125,26 +148,17 @@ export default function ChatPage() {
                             }}
                         />
 
-                        <Button
-                            styleSheet={{
-                                height: "44px",
-                                width: "5%",
-                                border: "0",
-                                resize: "none",
-                                borderRadius: "5px",
-                                padding: "6px 8px",
-                                marginBottom: "5px",
-                                backgroundColor:
-                                    appConfig.theme.colors.neutrals[800],
-                                marginRight: "12px",
-                                color: appConfig.theme.colors.neutrals[200],
+                        <ButtonSendSticker
+                            onStickerClick={(sticker) => {
+                                handleNewMessage(":sticker:" + sticker);
                             }}
-                            variant="primary"
-                            colorVariant="neutral"
-                            label="Send"
+                        />
+
+                        <ButtonSendMessage
                             onClick={() => {
                                 handleNewMessage(mensagem);
                             }}
+                            disabled={mensagem.length === 0}
                         />
                     </Box>
                 </Box>
@@ -237,7 +251,16 @@ function MessageList(props) {
                                 {new Date().toLocaleDateString()}
                             </Text>
                         </Box>
-                        {mensagem.texto}
+                        {mensagem.texto.startsWith(":sticker:") ? (
+                            <Image
+                                src={mensagem.texto.replace(":sticker:", "")}
+                                styleSheet={{
+                                    maxWidth: "10%",
+                                }}
+                            />
+                        ) : (
+                            mensagem.texto
+                        )}
                     </Text>
                 );
             })}
