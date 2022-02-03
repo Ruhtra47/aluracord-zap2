@@ -9,8 +9,8 @@ import { ButtonSendSticker } from "../src/components/ButtonSendSticker";
 import { ButtonSendMessage } from "../src/components/ButtonSendMessage";
 
 const SUPABASE_ANON_KEY =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlhdCI6MTY0MzI4ODkyNSwiZXhwIjoxOTU4ODY0OTI1fQ.TYARWNAHIq0ceEllZmYeurieykMmXEJEW2wVD0PcucI";
-const SUPABASE_URL = "https://aliedxyrdogukfhrszxg.supabase.co";
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlhdCI6MTY0MzkwNzQ1NiwiZXhwIjoxOTU5NDgzNDU2fQ.tluqIrJLGxe4XqDft-jXGDGFTk7KDNip39ftLyL-sQ8";
+const SUPABASE_URL = "https://rjwrxwzxylnjbehptonr.supabase.co";
 const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 function MessageListener(adicionarMensagem) {
