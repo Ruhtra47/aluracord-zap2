@@ -63,6 +63,11 @@ export default function ChatPage() {
             });
 
         setMensagem("");
+        MessageListener((newmsg) => {
+            setListaMensagens((valorAtualLista) => {
+                return [novaMensagem, ...valorAtualLista];
+            });
+        });
     }
 
     return (
